@@ -1,0 +1,6 @@
+copied gitignore file from template:
+https://github.com/github/gitignore/blob/master/Python.gitignore
+
+got ideas for parsing dates from:
+https://stackoverflow.com/questions/16870663/how-do-i-validate-a-d
+

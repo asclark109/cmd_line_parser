@@ -1,8 +1,10 @@
-"""class module for custom object task"""
+"""class module for custom object: Task, obj that holds
+info about something that needs to be done
+"""
 
 # metadata
 __author__ = 'Austin Clark'
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 # import modules
 import re                             # parsing dates
@@ -74,6 +76,21 @@ class Task:
             return True
         except ValueError:
             return False
+
+    def __str__(self):
+        """representation idea borrowed from:
+        https://www.kite.com/python/answers/how-to-print-a-list-of-lists-in-columns-in-python
+        """
+        table_of_objs_to_print = [[this_task.id,this_task.name,this_task.created] for this_task in self.tasks]
+
+        length_list = [len(element) for row in table_of_objs_to_print for element in row]
+        column_width = max(length_list)
+
+        entire_representation = ''
+        for row in table_of_objs_to_print:
+            entire_representation += "".join(element.ljust(column_width + 2) for element in row)
+
+        return entire_representation
 
 
 if __name__ == '__main__':
