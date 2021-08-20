@@ -40,8 +40,10 @@ def main():
         else:
             new_task = task.Task(args.add)
         task_mnger.add(new_task)
+        print("Created task {}".format(new_task.id))
     elif args.delete:
         task_mnger.delete(args.delete)
+        print("Deleted task {}".format(args.delete))
     elif args.list:
         task_mnger.list()
     elif args.report:
@@ -50,6 +52,7 @@ def main():
         task_mnger.query(args.query)
     elif args.done:
         task_mnger.done(args.done)
+        print("Completed task {}".format(args.done))
         
     task_mnger.pickle_tasks()
 

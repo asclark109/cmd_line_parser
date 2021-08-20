@@ -37,12 +37,18 @@ class Task:
         - due date - date, this is optional
     """
 
-    # set up a counter to assign ID's to task objects when created
-    # create instance variable to store information about what the
+    # set up a counter to assign ID's to Task objects when created.
+    # Create a class variable to store information about what the
     # next unique available ID is
     start_id = 1
     id_iterator = count(start=start_id)
 
+    # function used to set the ID iterator to the next unique value
+    # based on the ID's already used for the Task objects existing
+    # in the Tasks instance (this function below will be used to,
+    # for example, set the counter to 4 when the Tasks file is instantiated
+    # and reads in three tasks saved in the pickle file with the ID's
+    # 1,2,3).
     @classmethod
     def set_id_iterator(self,num):
         self.start_id = num
@@ -54,9 +60,6 @@ class Task:
         if priority not in [1,2,3]:
             raise ValueError('bad value given for priority \
             (must be in [1,2,3]): '+str(priority))
-
-        # if type(id) != int:
-        #     raise TypeError('non-int type given for ID.')
         
         # parse date and confirm correctness
         if due_date is not None:
@@ -70,7 +73,7 @@ class Task:
         else:
             self.due_date = due_date
 
-        # instantiate instance vars
+        # instance vars
         self.created = datetime.now()
         self.completed = None
         self.name = name
@@ -92,20 +95,27 @@ class Task:
         except ValueError:
             return False
 
-    # def __str__(self):
-    #     return "<{0:8d}, {0:20s}, {40s}>".format(self.id,self.name,self.created)
-
     def age(self):
+        """returns elapsed time from now until creation of task,
+        expressed in days. Used in printing of tasks list (--list, 
+        --report).
+        """
         delta = datetime.now() - self.created
         return delta.days
         
     def printable_attributes(self):
+        """this function returns a list of str objects describing
+        basic attributes of the Task object. See tasks.Tasks.list().
+        """
         id_str = self.id
         age_str = str(self.age())+'d'
         due_date_str = self.due_date if self.due_date is not None else "-"
         return [id_str,age_str,due_date_str,self.priority,self.name]
 
     def report_attributes(self):
+        """this function returns a list of str objects describing
+        more basic attributes of the Task object. See tasks.Tasks.report().
+        """
         creation_date_str = self.created.strftime("%c")
         
         if self.completed is not None:

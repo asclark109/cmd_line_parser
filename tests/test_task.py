@@ -1,6 +1,6 @@
 """tests for task.py"""
 import pytest
-from main import task
+from src import task
 
 
 def test_task_objcreation():

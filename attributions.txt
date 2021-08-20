@@ -1,6 +1,8 @@
 copied gitignore file from template:
 https://github.com/github/gitignore/blob/master/Python.gitignore
 
-got ideas for parsing dates from:
+got some ideas for parsing dates from:
 https://stackoverflow.com/questions/16870663/how-do-i-validate-a-d
 
+for tasks.Tasks.report() method, borrowed column "padding" approach described here.
+https://www.kite.com/python/answers/how-to-print-a-list-of-lists-in-columns-in-python
