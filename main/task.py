@@ -7,8 +7,6 @@ __author__ = 'Austin Clark'
 __version__ = '1.0.1'
 
 # import modules
-import re                             # parsing dates
-import time
 from datetime import date, datetime   # handle dates
 from dateutil.parser import parse     # validate dates
 from itertools import count           # handle ID counting
@@ -24,6 +22,8 @@ def main():
     print(t1.name)
     print(t1.id)
     print(t1.due_date)
+    print(t1.age())
+    print(t1)
 
 class Task:
     """Representation of a task
@@ -38,28 +38,43 @@ class Task:
     """
 
     # set up a counter to assign ID's to task objects when created
-    id_counter = count(start=1)
+    # create instance variable to store information about what the
+    # next unique available ID is
+    start_id = 1
+    id_iterator = count(start=start_id)
 
-    def __init__(self,name,due_date,priority = 1):
+    @classmethod
+    def set_id_iterator(self,num):
+        self.start_id = num
+        self.id_iterator = count(start=num)
+
+    def __init__(self,name,due_date=None,priority = 1):
 
         # check for bad inputs
         if priority not in [1,2,3]:
-            raise ValueError('bad value given for priority (must be in [1,2,3]): '+str(priority))
+            raise ValueError('bad value given for priority \
+            (must be in [1,2,3]): '+str(priority))
+
+        # if type(id) != int:
+        #     raise TypeError('non-int type given for ID.')
         
         # parse date and confirm correctness
-        self.validate_date(due_date)
-
-        # knowing the date can be parsed,
-        # create datetime object with date and save it as a str representation.
-        # This is to make use of datetime module's ability to cleanly format date.
-        due_date_datetime = datetime.strptime(due_date,"%m/%d/%Y")
-        self.due_date = datetime.strftime(due_date_datetime, "%m/%d/%Y")
+        if due_date is not None:
+            self.validate_date(due_date)
+            # knowing the date can be parsed,
+            # create datetime object with date and save it as a str
+            # representation. This is to make use of datetime module's
+            # ability to cleanly format date.
+            due_date_datetime = datetime.strptime(due_date,"%m/%d/%Y")
+            self.due_date = datetime.strftime(due_date_datetime, "%m/%d/%Y")
+        else:
+            self.due_date = due_date
 
         # instantiate instance vars
         self.created = datetime.now()
         self.completed = None
         self.name = name
-        self.id = next(self.id_counter)
+        self.id = next(self.id_iterator)
         self.priority = priority
 
     # helper fcn to validate date: borrowing ideas from 
@@ -77,20 +92,28 @@ class Task:
         except ValueError:
             return False
 
-    def __str__(self):
-        """representation idea borrowed from:
-        https://www.kite.com/python/answers/how-to-print-a-list-of-lists-in-columns-in-python
-        """
-        table_of_objs_to_print = [[this_task.id,this_task.name,this_task.created] for this_task in self.tasks]
+    # def __str__(self):
+    #     return "<{0:8d}, {0:20s}, {40s}>".format(self.id,self.name,self.created)
 
-        length_list = [len(element) for row in table_of_objs_to_print for element in row]
-        column_width = max(length_list)
+    def age(self):
+        delta = datetime.now() - self.created
+        return delta.days
+        
+    def printable_attributes(self):
+        id_str = self.id
+        age_str = str(self.age())+'d'
+        due_date_str = self.due_date if self.due_date is not None else "-"
+        return [id_str,age_str,due_date_str,self.priority,self.name]
 
-        entire_representation = ''
-        for row in table_of_objs_to_print:
-            entire_representation += "".join(element.ljust(column_width + 2) for element in row)
+    def report_attributes(self):
+        creation_date_str = self.created.strftime("%c")
+        
+        if self.completed is not None:
+            completion_date_str = self.completed.strftime("%c")
+        else:
+            completion_date_str = "-"
 
-        return entire_representation
+        return self.printable_attributes() + [creation_date_str, completion_date_str]
 
 
 if __name__ == '__main__':
