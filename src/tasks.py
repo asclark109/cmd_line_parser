@@ -97,8 +97,13 @@ class Tasks:
         table_of_tasks_to_print +=[["-"*2, "-"*3, "-"*8, "-"*8, "-"*4,"-"*27, "-"*25]]
 
         # sort tasks
-        self.tasks.sort(key=lambda x: x.priority)
-        self.tasks.sort(key=lambda x: x.due_date if x.due_date is not None else "-")
+        # sort with three keys of most importance to least importance: 
+        # (1): most importantly, sort by defined due date to not defined (puts '-' at the bottom),
+        # (2): next importantly, sort by task priority
+        # (3): least importantly, sort by due date.
+        self.tasks.sort(key= lambda x: (x.due_date is None,x.priority,x.due_date if x.due_date is not None else "99/99/9999"))
+        print(self.tasks[5].due_date)
+        
 
         # grab things we want to print from each task object 
         table_of_tasks_to_print += [this_task.report_attributes() for this_task in self.tasks]
@@ -124,7 +129,6 @@ class Tasks:
         """marks a task complete by changing due date of task to '-'."""
         for task_item in self.tasks:
             if task_item.id == id:
-                task_item.due_date = '-'
                 task_item.completed = datetime.now()
 
     def query(self,search_term):
