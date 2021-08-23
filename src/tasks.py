@@ -9,7 +9,7 @@ from datetime import datetime
 import os
 import pickle
 import task
-import itertools
+import operator
 
 # global constants
 DATA_ROOT_PATH = ''
@@ -71,6 +71,11 @@ class Tasks:
     def list(self):
         """print out the Task objects that are incomplete"""
         incomplete_tasks = self.get_incomplete_tasks()
+        # sort with three keys of most importance to least importance: 
+        # (1): most importantly, sort by defined due date to not defined (puts '-' at the bottom),
+        # (2): next importantly, sort by task priority
+        # (3): least importantly, sort by due date.
+        incomplete_tasks.sort(key= lambda x: (x.due_date is None,x.priority,x.due_date if x.due_date is not None else "99/99/9999"))
         print(self.__str__(incomplete_tasks))
 
     def delete(self,id):
@@ -91,7 +96,11 @@ class Tasks:
         table_of_tasks_to_print = [["ID", "Age", "Due Date", "Priority", "Task","Created","Completed"]]
         table_of_tasks_to_print +=[["-"*2, "-"*3, "-"*8, "-"*8, "-"*4,"-"*27, "-"*25]]
 
-        # grab things we want to print from each task object    
+        # sort tasks
+        self.tasks.sort(key=lambda x: x.priority)
+        self.tasks.sort(key=lambda x: x.due_date if x.due_date is not None else "-")
+
+        # grab things we want to print from each task object 
         table_of_tasks_to_print += [this_task.report_attributes() for this_task in self.tasks]
         table_of_tasks_to_print = [list(map(str,x)) for x in table_of_tasks_to_print]
 

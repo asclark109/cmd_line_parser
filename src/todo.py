@@ -32,11 +32,12 @@ def main():
 
     # handle arguments
     if args.add:
-        if args.due:
-            if args.priority:
-                new_task = task.Task(args.add,args.due,args.priority)
-            else:
-                new_task = task.Task(args.add,args.due)
+        if args.due and args.priority:
+            new_task = task.Task(args.add,args.due,args.priority)
+        elif args.due:
+            new_task = task.Task(args.add,args.due)
+        elif args.priority:
+            new_task = task.Task(args.add,priority = args.priority)
         else:
             new_task = task.Task(args.add)
         task_mnger.add(new_task)
