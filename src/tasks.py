@@ -126,7 +126,9 @@ class Tasks:
         print(entire_representation)
 
     def done(self,id):
-        """marks a task complete by changing due date of task to '-'."""
+        """marks a task complete by assigning datetime object to Task.completed
+        attribute.
+        """
         for task_item in self.tasks:
             if task_item.id == id:
                 task_item.completed = datetime.now()
